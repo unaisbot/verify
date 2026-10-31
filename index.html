@@ -9,9 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <title>Certificate Verification | TBARC India</title>
-<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
-<link rel="shortcut icon" type="image/png" href="images/favicon.png">
-<link rel="apple-touch-icon" href="images/favicon.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23075333'/%3E%3Cpath d='M32 8 51 15v15c0 13-8 22-19 27C21 52 13 43 13 30V15z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='m22 32 7 7 14-15' fill='none' stroke='%23d6b66a' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23075333'/%3E%3Cpath d='M32 8 51 15v15c0 13-8 22-19 27C21 52 13 43 13 30V15z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='m22 32 7 7 14-15' fill='none' stroke='%23d6b66a' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
 :root{
   --green:#075333;--dark:#043b25;--deep:#022b1b;--light:#f0f6ef;
@@ -57,7 +56,10 @@ input:focus{border-color:var(--green);box-shadow:0 0 0 3px #07533314}
 .verify-button:disabled{opacity:.65;cursor:wait;transform:none}
 #status{text-align:center;margin-top:18px;line-height:1.5;font-size:13px;color:var(--muted);min-height:20px}
 .result{margin-top:24px;border:1px solid #cfe3d2;border-radius:12px;overflow:hidden}
-.result-head{padding:15px 18px;background:#eaf5ed;color:#17613a;font-weight:800;font-size:14px}
+.result-head{padding:15px 18px;background:#eaf5ed;color:#17613a;font-weight:800;font-size:14px;display:flex;align-items:center;gap:10px}
+.result-head .verified-icon{width:25px;height:25px;flex:0 0 25px;display:block}
+.result-head .verified-title{display:block;line-height:1.35}
+.result-head .verified-subtitle{display:block;margin-top:3px;font-size:11px;font-weight:600;color:#397653}
 .result-body{padding:12px 20px}
 .detail{padding:13px 0;border-bottom:1px solid #edf0ed}
 .detail:last-child{border:0}
@@ -141,7 +143,17 @@ input:focus{border-color:var(--green);box-shadow:0 0 0 3px #07533314}
     <div id="status" role="status" aria-live="polite"></div>
 
     <div id="result" class="result hidden">
-      <div class="result-head">✓ Certificate Record Found</div>
+      <div class="result-head">
+        <svg class="verified-icon" viewBox="0 0 32 32" role="img" aria-label="Verified">
+          <path d="M16 2.8 20 5l4.6-.1 1.4 4.3 3.5 3-1.2 4.4 1.2 4.4-3.5 3-1.4 4.3-4.6-.1-4 2.2-4-2.2-4.6.1L6 24l-3.5-3 1.2-4.4-1.2-4.4 3.5-3 1.4-4.3L12 5z" fill="currentColor" opacity=".16"/>
+          <path d="M16 2.8 20 5l4.6-.1 1.4 4.3 3.5 3-1.2 4.4 1.2 4.4-3.5 3-1.4 4.3-4.6-.1-4 2.2-4-2.2-4.6.1L6 24l-3.5-3 1.2-4.4-1.2-4.4 3.5-3 1.4-4.3L12 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="m10.5 16.2 3.7 3.7 7.5-8" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>
+          <span class="verified-title">Verified Record</span>
+          <span class="verified-subtitle">This document matches an official TBARC record</span>
+        </span>
+      </div>
       <div class="result-body">
         <div class="detail"><span class="detail-label">Certificate Number</span><span class="detail-value" id="outNumber"></span></div>
         <div class="detail"><span class="detail-label">Name</span><span class="detail-value" id="outName"></span></div>
