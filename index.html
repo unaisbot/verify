@@ -1,1 +1,293 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#103d32">
+<title>TBARC India | Certificate Verification</title>
+<meta name="description" content="Official TBARC India certificate verification portal.">
+<style>
+:root {
+  --green: #103d32;
+  --green2: #1c604b;
+  --light: #f3f7f4;
+  --text: #26352e;
+  --muted: #718078;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: var(--light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  background: var(--green);
+  color: white;
+  padding: 25px 18px;
+  text-align: center;
+}
+.brand {
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+.tagline {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  margin-top: 7px;
+  opacity: .85;
+}
+main {
+  width: min(92%, 650px);
+  margin: 55px auto;
+  flex: 1;
+}
+.intro { text-align: center; margin-bottom: 28px; }
+.intro h1 {
+  color: var(--green);
+  font-size: clamp(25px, 5vw, 34px);
+  margin-bottom: 12px;
+}
+.intro p { color: var(--muted); line-height: 1.6; }
+.panel {
+  background: white;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.06);
+}
+label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #d8e1db;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+}
+input:focus { border-color: var(--green2); }
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:hover { background: var(--green2); }
+button:disabled { opacity: .65; cursor: wait; }
+#status {
+  text-align: center;
+  margin-top: 20px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+.result {
+  margin-top: 24px;
+  border: 1px solid #dce8df;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.result-head {
+  padding: 18px;
+  background: #eaf5ed;
+  color: #17613a;
+  font-weight: 700;
+}
+.result-body { padding: 20px; }
+.detail {
+  padding: 13px 0;
+  border-bottom: 1px solid #edf0ed;
+}
+.detail:last-child { border: 0; }
+.detail-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.detail-value {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.hidden { display: none; }
+footer {
+  background: var(--green);
+  color: white;
+  text-align: center;
+  padding: 22px 15px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+footer a { color: white; }
+@media(max-width:480px) {
+  main { margin: 35px auto; }
+  .panel { padding: 21px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">TBARC INDIA</div>
+  <div class="tagline">TROPICAL BIODIVERSITY ACTION AND RESEARCH CENTRE</div>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>Certificate Verification</h1>
+    <p>Verify the authenticity of certificates issued for programmes organised by TBARC India.</p>
+  </section>
+
+  <section class="panel">
+    <form id="verifyForm">
+      <label for="certificate">Certificate Number</label>
+      <input
+        id="certificate"
+        type="text"
+        placeholder="e.g. TBARC-2026-001"
+        autocomplete="off"
+        required
+      >
+      <button id="verifyButton" type="submit">Verify Certificate</button>
+    </form>
+
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <div id="result" class="result hidden">
+      <div class="result-head">✓ Certificate Record Found</div>
+      <div class="result-body">
+        <div class="detail">
+          <span class="detail-label">Certificate Number</span>
+          <span class="detail-value" id="outNumber"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Name</span>
+          <span class="detail-value" id="outName"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Affiliation</span>
+          <span class="detail-value" id="outAffiliation"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Programme / Subject</span>
+          <span class="detail-value" id="outSubject"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>TBARC INDIA</strong><br>
+  Tropical Biodiversity Action and Research Centre<br>
+  Official Certificate Verification Portal
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzmv59tVF0f7iEtEpRXyBfrwR42tVCdCHUJDRG7Ke-yGhMsuFRHl_WBgcD-GxEu0itC/exec";
+
+const form = document.getElementById("verifyForm");
+const input = document.getElementById("certificate");
+const button = document.getElementById("verifyButton");
+const statusBox = document.getElementById("status");
+const resultBox = document.getElementById("result");
+
+let requestTimer;
+let currentScript;
+
+function showValue(id, value) {
+  document.getElementById(id).textContent = value || "Not provided";
+}
+
+function resetResult() {
+  resultBox.classList.add("hidden");
+}
+
+function finishRequest() {
+  clearTimeout(requestTimer);
+  if (currentScript) {
+    currentScript.remove();
+    currentScript = null;
+  }
+  button.disabled = false;
+  button.textContent = "Verify Certificate";
+}
+
+window.handleCertificateResponse = function(data) {
+  finishRequest();
+
+  if (data && data.success) {
+    statusBox.textContent = "";
+    showValue("outNumber", data.certificateNumber);
+    showValue("outName", data.name);
+    showValue("outAffiliation", data.affiliation);
+    showValue("outSubject", data.subject);
+    resultBox.classList.remove("hidden");
+  } else {
+    resetResult();
+    statusBox.textContent =
+      data?.message || "Certificate not found.";
+    statusBox.style.color = "#b42318";
+  }
+};
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const certificateNumber = input.value.trim().toUpperCase();
+
+  if (!certificateNumber) return;
+
+  resetResult();
+  finishRequest();
+
+  statusBox.style.color = "#52635a";
+  statusBox.textContent = "Searching certificate records...";
+  button.disabled = true;
+  button.textContent = "Please wait...";
+
+  const separator = API_URL.includes("?") ? "&" : "?";
+  const url = API_URL + separator +
+    "id=" + encodeURIComponent(certificateNumber) +
+    "&callback=handleCertificateResponse";
+
+  currentScript = document.createElement("script");
+  currentScript.src = url;
+
+  currentScript.onerror = function() {
+    finishRequest();
+    statusBox.style.color = "#b42318";
+    statusBox.textContent =
+      "Unable to connect. Please try again later.";
+  };
+
+  requestTimer = setTimeout(function() {
+    finishRequest();
+    statusBox.style.color = "#b42318";
+    statusBox.textContent =
+      "The request timed out. Please try again.";
+  }, 15000);
+
+  document.body.appendChild(currentScript);
+});
+</script>
+
+</body>
+</html>
